@@ -1,0 +1,39 @@
+package io.github.fi0x.sailengine.core.utils;
+
+import org.lwjgl.system.MemoryUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+
+public class Utils
+{
+	public static FloatBuffer storeDataInBuffer(float[] data)
+	{
+		FloatBuffer buffer = MemoryUtil.memAllocFloat(data.length);
+		buffer.put(data).flip();
+		return buffer;
+	}
+
+	public static IntBuffer storeDataInBuffer(int[] data)
+	{
+		IntBuffer buffer = MemoryUtil.memAllocInt(data.length);
+		buffer.put(data).flip();
+		return buffer;
+	}
+
+	public static String loadResource(String filename) throws IOException
+	{
+		String result;
+		try (InputStream is = Utils.class.getResourceAsStream(filename))
+		{
+			Scanner scanner = new Scanner(is, StandardCharsets.UTF_8.name());
+			result = scanner.useDelimiter("\\A").next();
+		}
+		return result;
+	}
+}
