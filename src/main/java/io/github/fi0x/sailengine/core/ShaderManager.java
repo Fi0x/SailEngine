@@ -1,6 +1,11 @@
 package io.github.fi0x.sailengine.core;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShaderManager
 {
@@ -8,11 +13,37 @@ public class ShaderManager
 	private int vertexShaderId;
 	private int fragmentShaderId;
 
+	private final Map<String, Integer> uniforms;
+
 	public ShaderManager() throws Exception
 	{
 		programId = GL20.glCreateProgram();
 		if (programId == 0)
 			throw new Exception("Could not create shader");
+
+		uniforms = new HashMap<>();
+	}
+
+	public void createUniform(String uniformName) throws Exception
+	{
+		int uniformLocation = GL20.glGetUniformLocation(programId, uniformName);
+		if (uniformLocation < 0)
+			throw new Exception("Could not find uniform " + uniformName);
+
+		uniforms.put(uniformName, uniformLocation);
+	}
+
+	public void setUniform(String uniformName, Matrix4f value)
+	{
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			GL20.glUniformMatrix4fv(uniforms.get(uniformName), false, value.get(stack.mallocFloat(16)));
+		}
+	}
+
+	public void setUniform(String uniformName, int value)
+	{
+		GL20.glUniform1i(uniforms.get(uniformName), value);
 	}
 
 	public void createVertexShader(String shaderCode) throws Exception

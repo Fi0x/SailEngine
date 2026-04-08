@@ -5,6 +5,7 @@ import io.github.fi0x.sailengine.core.ObjectLoader;
 import io.github.fi0x.sailengine.core.RenderManager;
 import io.github.fi0x.sailengine.core.WindowManager;
 import io.github.fi0x.sailengine.core.entity.Model;
+import io.github.fi0x.sailengine.core.entity.Texture;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -31,12 +32,14 @@ public class TestGame implements ILogic
 	{
 		renderer.init();
 
-		float[] vertices = ModelVertices.RECT;
-		int[] indices = {
-				0,1,3,3,1,2
+		float[] vertices = {-0.5f, 0.5f, 0f, -0.5f, -0.5f, 0f, 0.5f, -0.5f, 0f, 0.5f, 0.5f, 0f,
 		};
+		int[] indices = {0, 1, 3, 3, 1, 2};
 
-		model = loader.loadModel(vertices, indices);
+		float[] textureCoords = {0, 0, 0, 1, 1, 1, 1, 0};
+
+		model = loader.loadModel(vertices, textureCoords, indices);
+		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")));
 	}
 
 	@Override
@@ -54,14 +57,17 @@ public class TestGame implements ILogic
 	public void update()
 	{
 		color += direction * 0.01f;
-		if(color > 1) color = 1f;
-		else if (color < 0) color = 0f;
+		if (color > 1)
+			color = 1f;
+		else if (color < 0)
+			color = 0f;
 	}
 
 	@Override
 	public void render()
 	{
-		if(window.isResize()) {
+		if (window.isResize())
+		{
 			GL11.glViewport(0, 0, window.getWidth(), window.getHeight());
 			window.setResize(true);
 		}
