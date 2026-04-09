@@ -4,6 +4,7 @@ import io.github.fi0x.sailengine.core.*;
 import io.github.fi0x.sailengine.core.entity.Entity;
 import io.github.fi0x.sailengine.core.entity.Model;
 import io.github.fi0x.sailengine.core.entity.Texture;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -11,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 public class TestGame implements ILogic
 {
 	private static final float CAMERA_MOVE_SPEED = 0.05f;
+	private static final float MOUSE_SENSITIVITY = 0.2f;
 
 	private final RenderManager renderer;
 	private final ObjectLoader loader;
@@ -41,9 +43,7 @@ public class TestGame implements ILogic
 				0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f,
 				-0.5f, 0.5f,};
 		float[] textureCoords = new float[]{0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f,
-				0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f,
-				0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f,
-		};
+				0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f,};
 		int[] indices = new int[]{0, 1, 3, 3, 1, 2, 8, 10, 11, 9, 8, 11, 12, 13, 7, 5, 12, 7, 14, 15, 6, 4, 14, 6, 16,
 				18, 19, 17, 16, 19, 4, 6, 7, 5, 4, 7,};
 
@@ -72,10 +72,16 @@ public class TestGame implements ILogic
 	}
 
 	@Override
-	public void update()
+	public void update(float interval, MouseInput mouseInput)
 	{
 		camera.movePosition(cameraInc.x * CAMERA_MOVE_SPEED, cameraInc.y * CAMERA_MOVE_SPEED,
 				cameraInc.z * CAMERA_MOVE_SPEED);
+
+		if (mouseInput.isRightButtonPress())
+		{
+			Vector2f rotVec = mouseInput.getDisplVec();
+			camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+		}
 
 		entity.incRotation(0.0f, 0.5f, 0.0f);
 	}
