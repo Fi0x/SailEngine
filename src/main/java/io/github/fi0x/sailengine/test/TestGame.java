@@ -1,30 +1,33 @@
 package io.github.fi0x.sailengine.test;
 
-import io.github.fi0x.sailengine.core.ILogic;
-import io.github.fi0x.sailengine.core.ObjectLoader;
-import io.github.fi0x.sailengine.core.RenderManager;
-import io.github.fi0x.sailengine.core.WindowManager;
+import io.github.fi0x.sailengine.core.*;
+import io.github.fi0x.sailengine.core.entity.Entity;
 import io.github.fi0x.sailengine.core.entity.Model;
 import io.github.fi0x.sailengine.core.entity.Texture;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 public class TestGame implements ILogic
 {
-	private int direction = 0;
-	private float color = 0.0f;
+	private static final float CAMERA_MOVE_SPEED = 0.05f;
 
 	private final RenderManager renderer;
 	private final ObjectLoader loader;
 	private final WindowManager window;
 
-	private Model model;
+	private Entity entity;
+	private Camera camera;
+
+	private Vector3f cameraInc;
 
 	public TestGame()
 	{
 		renderer = new RenderManager();
 		window = Launcher.getWindow();
 		loader = new ObjectLoader();
+		camera = new Camera();
+		cameraInc = new Vector3f(0, 0, 0);
 	}
 
 	@Override
@@ -32,35 +35,49 @@ public class TestGame implements ILogic
 	{
 		renderer.init();
 
-		float[] vertices = {-0.5f, 0.5f, 0f, -0.5f, -0.5f, 0f, 0.5f, -0.5f, 0f, 0.5f, 0.5f, 0f,
+		float[] vertices = new float[]{-0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f,
+				-0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f,
+				0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f,
+				0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f,
+				-0.5f, 0.5f,};
+		float[] textureCoords = new float[]{0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f,
+				0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f,
+				0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f,
 		};
-		int[] indices = {0, 1, 3, 3, 1, 2};
+		int[] indices = new int[]{0, 1, 3, 3, 1, 2, 8, 10, 11, 9, 8, 11, 12, 13, 7, 5, 12, 7, 14, 15, 6, 4, 14, 6, 16,
+				18, 19, 17, 16, 19, 4, 6, 7, 5, 4, 7,};
 
-		float[] textureCoords = {0, 0, 0, 1, 1, 1, 1, 0};
 
-		model = loader.loadModel(vertices, textureCoords, indices);
+		Model model = loader.loadModel(vertices, textureCoords, indices);
 		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")));
+		entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
 	}
 
 	@Override
 	public void input()
 	{
-		if (window.isKeyPressed(GLFW.GLFW_KEY_UP))
-			direction = 1;
-		else if (window.isKeyPressed(GLFW.GLFW_KEY_DOWN))
-			direction = -1;
-		else
-			direction = 0;
+		cameraInc.set(0, 0, 0);
+		if (window.isKeyPressed(GLFW.GLFW_KEY_W))
+			cameraInc.z -= 1;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_S))
+			cameraInc.z += 1;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_A))
+			cameraInc.x -= 1;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_D))
+			cameraInc.x += 1;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_Z))
+			cameraInc.y -= 1;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_X))
+			cameraInc.y += 1;
 	}
 
 	@Override
 	public void update()
 	{
-		color += direction * 0.01f;
-		if (color > 1)
-			color = 1f;
-		else if (color < 0)
-			color = 0f;
+		camera.movePosition(cameraInc.x * CAMERA_MOVE_SPEED, cameraInc.y * CAMERA_MOVE_SPEED,
+				cameraInc.z * CAMERA_MOVE_SPEED);
+
+		entity.incRotation(0.0f, 0.5f, 0.0f);
 	}
 
 	@Override
@@ -72,8 +89,8 @@ public class TestGame implements ILogic
 			window.setResize(true);
 		}
 
-		window.setClearColour(color, color, color, 0.0f);
-		renderer.render(model);
+		window.setClearColour(0.0f, 0.0f, 0.0f, 0.0f);
+		renderer.render(entity, camera);
 	}
 
 	@Override
