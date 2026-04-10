@@ -7,7 +7,6 @@ import io.github.fi0x.sailengine.core.entity.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 public class TestGame implements ILogic
 {
@@ -39,8 +38,8 @@ public class TestGame implements ILogic
 
 
 		Model model = loader.loadObjModel("/models/bunny.obj");
-		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")));
-		entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
+		model.setTexture(new Texture(loader.loadTexture("textures/blue.png")), 1f);
+		entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 10);
 	}
 
 	@Override
@@ -73,19 +72,12 @@ public class TestGame implements ILogic
 			camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
 		}
 
-		entity.incRotation(0.0f, 0.5f, 0.0f);
+		entity.incRotation(0.0f, 0.25f, 0.0f);
 	}
 
 	@Override
 	public void render()
 	{
-		if (window.isResize())
-		{
-			GL11.glViewport(0, 0, window.getWidth(), window.getHeight());
-			window.setResize(true);
-		}
-
-		window.setClearColour(0.0f, 0.0f, 0.0f, 0.0f);
 		renderer.render(entity, camera);
 	}
 
