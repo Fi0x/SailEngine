@@ -37,7 +37,7 @@ public class WindowManager
 	public void init()
 	{
 		GLFWErrorCallback.createPrint(System.err).set();
-		if(!GLFW.glfwInit())
+		if (!GLFW.glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		GLFW.glfwDefaultWindowHints();
@@ -49,7 +49,8 @@ public class WindowManager
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 
 		boolean maximised = false;
-		if(width == 0 || height == 0) {
+		if (width == 0 || height == 0)
+		{
 			width = 100;
 			height = 100;
 			GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_TRUE);
@@ -57,7 +58,7 @@ public class WindowManager
 		}
 
 		window = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
-		if(window == MemoryUtil.NULL)
+		if (window == MemoryUtil.NULL)
 			throw new RuntimeException("Failed to create GLFW window");
 
 		GLFW.glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
@@ -67,20 +68,21 @@ public class WindowManager
 		});
 
 		GLFW.glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE)
+			if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE)
 				GLFW.glfwSetWindowShouldClose(window, true);
 		});
 
-		if(maximised)
+		if (maximised)
 			GLFW.glfwMaximizeWindow(window);
-		else {
+		else
+		{
 			GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 			GLFW.glfwSetWindowPos(window, (vidMode.width() - width) / 2, (vidMode.height() - height) / 2);
 		}
 
 		GLFW.glfwMakeContextCurrent(window);
 
-		if(isVsync())
+		if (isVsync())
 			GLFW.glfwSwapInterval(1);
 
 		GLFW.glfwShowWindow(window);
@@ -90,36 +92,43 @@ public class WindowManager
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_STENCIL_TEST);
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
+		//		GL11.glEnable(GL11.GL_CULL_FACE);
+		//		GL11.glCullFace(GL11.GL_BACK);
 	}
 
-	public void update() {
+	public void update()
+	{
 		GLFW.glfwSwapBuffers(window);
 		GLFW.glfwPollEvents();
 	}
 
-	public void cleanup() {
+	public void cleanup()
+	{
 		GLFW.glfwDestroyWindow(window);
 	}
 
-	public void setClearColour(float r, float g, float b, float a) {
+	public void setClearColour(float r, float g, float b, float a)
+	{
 		GL11.glClearColor(r, g, b, a);
 	}
 
-	public boolean isKeyPressed(int keycode) {
+	public boolean isKeyPressed(int keycode)
+	{
 		return GLFW.glfwGetKey(window, keycode) == GLFW.GLFW_PRESS;
 	}
 
-	public boolean windowShouldClose() {
+	public boolean windowShouldClose()
+	{
 		return GLFW.glfwWindowShouldClose(window);
 	}
 
-	public String getTitle() {
+	public String getTitle()
+	{
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(String title)
+	{
 		GLFW.glfwSetWindowTitle(window, title);
 	}
 
@@ -143,24 +152,30 @@ public class WindowManager
 		return projectionMatrix;
 	}
 
-	public Matrix4f updateProjectionMatrix() {
+	public Matrix4f updateProjectionMatrix()
+	{
 		float aspectRatio = (float) width / height;
 		return projectionMatrix.setPerspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
 	}
 
-	public Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
+	public Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height)
+	{
 		float aspectRatio = (float) width / height;
 		return matrix.setPerspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
 	}
 
-	public boolean isResize() {
+	public boolean isResize()
+	{
 		return resize;
 	}
-	public void setResize(boolean resize) {
+
+	public void setResize(boolean resize)
+	{
 		this.resize = resize;
 	}
 
-	public boolean isVsync() {
+	public boolean isVsync()
+	{
 		return vSync;
 	}
 }
