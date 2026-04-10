@@ -5,6 +5,7 @@ import io.github.fi0x.sailengine.core.entity.Entity;
 import io.github.fi0x.sailengine.core.entity.Model;
 import io.github.fi0x.sailengine.core.entity.Texture;
 import io.github.fi0x.sailengine.core.lighting.DirectionalLight;
+import io.github.fi0x.sailengine.core.lighting.PointLight;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -25,6 +26,7 @@ public class TestGame implements ILogic
 
 	private float lightAngle;
 	private DirectionalLight directionalLight;
+	private PointLight pointLight;
 
 	public TestGame()
 	{
@@ -46,9 +48,13 @@ public class TestGame implements ILogic
 		model.setTexture(new Texture(loader.loadTexture("textures/blue.png")), 1f);
 		entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 10);
 
-		float lightIntensity = 0.0f;
-		Vector3f lightPosition = new Vector3f(-1, -10, 0);
+		float lightIntensity = 1.0f;
+		Vector3f lightPosition = new Vector3f(0, 0, -3.2f);
 		Vector3f lightColour = new Vector3f(1, 1, 1);
+		pointLight = new PointLight(lightColour, lightPosition, lightIntensity, 0, 0, 1);
+
+		lightPosition = new Vector3f(-1, -10, 0);
+		lightColour = new Vector3f(1, 1, 1);
 		directionalLight = new DirectionalLight(lightColour, lightPosition, lightIntensity);
 	}
 
@@ -68,6 +74,15 @@ public class TestGame implements ILogic
 			cameraInc.y -= 1;
 		if (window.isKeyPressed(GLFW.GLFW_KEY_R))
 			cameraInc.y += 1;
+
+		if (window.isKeyPressed(GLFW.GLFW_KEY_L))
+			pointLight.getPosition().x += 0.1f;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_J))
+			pointLight.getPosition().x -= 0.1f;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_I))
+			pointLight.getPosition().y += 0.1f;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_K))
+			pointLight.getPosition().y -= 0.1f;
 	}
 
 	@Override
@@ -111,7 +126,7 @@ public class TestGame implements ILogic
 	@Override
 	public void render()
 	{
-		renderer.render(entity, camera, directionalLight);
+		renderer.render(entity, camera, directionalLight, pointLight);
 	}
 
 	@Override

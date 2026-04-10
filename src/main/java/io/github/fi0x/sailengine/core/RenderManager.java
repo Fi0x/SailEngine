@@ -2,6 +2,7 @@ package io.github.fi0x.sailengine.core;
 
 import io.github.fi0x.sailengine.core.entity.Entity;
 import io.github.fi0x.sailengine.core.lighting.DirectionalLight;
+import io.github.fi0x.sailengine.core.lighting.PointLight;
 import io.github.fi0x.sailengine.core.utils.Constants;
 import io.github.fi0x.sailengine.core.utils.Transformation;
 import io.github.fi0x.sailengine.core.utils.Utils;
@@ -36,9 +37,10 @@ public class RenderManager
 		shader.createMaterialUniform("material");
 		shader.createUniform("specularPower");
 		shader.createDirectionalLightingUniform("directionalLight");
+		shader.createPointLightUniform("pointLight");
 	}
 
-	public void render(Entity entity, Camera camera, DirectionalLight directionalLight)
+	public void render(Entity entity, Camera camera, DirectionalLight directionalLight, PointLight pointLight)
 	{
 		clear();
 
@@ -57,6 +59,7 @@ public class RenderManager
 		shader.setUniform("ambientLight", Constants.AMBIENT_LIGHT);
 		shader.setUniform("specularPower", Constants.SPECULAR_POWER);
 		shader.setUniform("directionalLight", directionalLight);
+		shader.setUniform("pointLight", pointLight);
 
 		GL30.glBindVertexArray(entity.getModel().getId());
 		GL20.glEnableVertexAttribArray(0);
