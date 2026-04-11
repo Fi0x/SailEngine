@@ -3,6 +3,7 @@ package io.github.fi0x.sailengine.core;
 import io.github.fi0x.sailengine.core.entity.Material;
 import io.github.fi0x.sailengine.core.lighting.DirectionalLight;
 import io.github.fi0x.sailengine.core.lighting.PointLight;
+import io.github.fi0x.sailengine.core.lighting.SpotLight;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -64,6 +65,13 @@ public class ShaderManager
 		createUniform(uniformName + ".exponent");
 	}
 
+	public void createSpotLightUniform(String uniformName) throws Exception
+	{
+		createPointLightUniform(uniformName + ".pl");
+		createUniform(uniformName + ".conedir");
+		createUniform(uniformName + ".cutoff");
+	}
+
 	public void setUniform(String uniformName, Matrix4f value)
 	{
 		try (MemoryStack stack = MemoryStack.stackPush())
@@ -121,6 +129,13 @@ public class ShaderManager
 		setUniform(uniformName + ".constant", pointLight.getConstant());
 		setUniform(uniformName + ".linear", pointLight.getLinear());
 		setUniform(uniformName + ".exponent", pointLight.getExponent());
+	}
+
+	public void setUniform(String uniformName, SpotLight spotLight)
+	{
+		setUniform(uniformName + ".pl", spotLight.getPointLight());
+		setUniform(uniformName + ".conedir", spotLight.getConeDirection());
+		setUniform(uniformName + ".cutoff", spotLight.getCutoff());
 	}
 
 	public void createVertexShader(String shaderCode) throws Exception

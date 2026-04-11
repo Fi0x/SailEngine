@@ -6,6 +6,7 @@ import io.github.fi0x.sailengine.core.entity.Model;
 import io.github.fi0x.sailengine.core.entity.Texture;
 import io.github.fi0x.sailengine.core.lighting.DirectionalLight;
 import io.github.fi0x.sailengine.core.lighting.PointLight;
+import io.github.fi0x.sailengine.core.lighting.SpotLight;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -27,6 +28,7 @@ public class TestGame implements ILogic
 	private float lightAngle;
 	private DirectionalLight directionalLight;
 	private PointLight pointLight;
+	private SpotLight spotLight;
 
 	public TestGame()
 	{
@@ -52,6 +54,12 @@ public class TestGame implements ILogic
 		Vector3f lightPosition = new Vector3f(0, 0, -3.2f);
 		Vector3f lightColour = new Vector3f(1, 1, 1);
 		pointLight = new PointLight(lightColour, lightPosition, lightIntensity, 0, 0, 1);
+
+		Vector3f coneDir = new Vector3f(0, 0, 1);
+		float cutoff = (float) Math.cos(Math.toRadians(180));
+		spotLight = new SpotLight(new PointLight(lightColour, new Vector3f(0, 0, 1f), lightIntensity, 0, 0, 1),
+				coneDir,
+				cutoff);
 
 		lightPosition = new Vector3f(-1, -10, 0);
 		lightColour = new Vector3f(1, 1, 1);
@@ -83,6 +91,12 @@ public class TestGame implements ILogic
 			pointLight.getPosition().y += 0.1f;
 		if (window.isKeyPressed(GLFW.GLFW_KEY_K))
 			pointLight.getPosition().y -= 0.1f;
+
+		float lightPos = spotLight.getPointLight().getPosition().z;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_N))
+			spotLight.getPointLight().getPosition().z = lightPos + 0.1f;
+		if (window.isKeyPressed(GLFW.GLFW_KEY_M))
+			spotLight.getPointLight().getPosition().z = lightPos - 0.1f;
 	}
 
 	@Override
@@ -126,7 +140,7 @@ public class TestGame implements ILogic
 	@Override
 	public void render()
 	{
-		renderer.render(entity, camera, directionalLight, pointLight);
+		renderer.render(entity, camera, directionalLight, pointLight, spotLight);
 	}
 
 	@Override
