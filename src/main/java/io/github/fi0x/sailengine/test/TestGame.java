@@ -11,6 +11,10 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class TestGame implements ILogic
 {
 	private static final float CAMERA_MOVE_SPEED = 0.05f;
@@ -20,7 +24,7 @@ public class TestGame implements ILogic
 	private final ObjectLoader loader;
 	private final WindowManager window;
 
-	private Entity entity;
+	private List<Entity> entities;
 	private Camera camera;
 
 	private Vector3f cameraInc;
@@ -45,9 +49,21 @@ public class TestGame implements ILogic
 	{
 		renderer.init();
 
+		entities = new ArrayList<>();
+
 		Model model = loader.loadObjModel("/models/cube-custom.obj");
 		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")), 1f);
-		entity = new Entity(model, new Vector3f(0f, 0f, -5), new Vector3f(0, 0, 0), 1);
+
+		Random rand = new Random();
+		for (int i = 0; i < 200; i++)
+		{
+			float x = rand.nextFloat() * 100 - 50;
+			float y = rand.nextFloat() * 100 - 50;
+			float z = rand.nextFloat() * -300;
+			entities.add(new Entity(model, new Vector3f(x, y, z),
+					new Vector3f(rand.nextFloat() * 180, rand.nextFloat() * 180, 0), 1));
+		}
+		entities.add(new Entity(model, new Vector3f(0f, 0f, -5), new Vector3f(0, 0, 0), 1));
 
 		float lightIntensity = 1.0f;
 		Vector3f lightPosition = new Vector3f(0, 0, -3.2f);
@@ -138,12 +154,15 @@ public class TestGame implements ILogic
 		double angRad = Math.toRadians(lightAngle);
 		directionalLight.getDirection().x = (float) Math.sin(angRad);
 		directionalLight.getDirection().y = (float) Math.cos(angRad);
+
+		for (Entity entity : entities)
+			renderer.processEntity(entity);
 	}
 
 	@Override
 	public void render()
 	{
-		renderer.render(entity, camera, directionalLight, pointLights, spotLights);
+		renderer.render(camera, directionalLight, pointLights, spotLights);
 	}
 
 	@Override
