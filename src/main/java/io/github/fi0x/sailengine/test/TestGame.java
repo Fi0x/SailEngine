@@ -45,10 +45,9 @@ public class TestGame implements ILogic
 	{
 		renderer.init();
 
-
-		Model model = loader.loadObjModel("/models/bunny.obj");
-		model.setTexture(new Texture(loader.loadTexture("textures/blue.png")), 1f);
-		entity = new Entity(model, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 10);
+		Model model = loader.loadObjModel("/models/cube-tex.obj");
+		model.setTexture(new Texture(loader.loadTexture("textures/texture.png")), 1f);
+		entity = new Entity(model, new Vector3f(0f, 0f, -5), new Vector3f(0, 0, 0), 1);
 
 		float lightIntensity = 1.0f;
 		Vector3f lightPosition = new Vector3f(0, 0, -3.2f);
