@@ -1,0 +1,23 @@
+# Test-Object
+
+# Vertices
+v -1 -1 -1
+v -1  1 -1
+v  1 -1 -1
+v  1  1 -1
+
+# Normal
+vn 0 0 1
+
+# uv Texture
+vt 0 0
+vt 0 1
+vt 1 0
+vt 1 1
+
+# Texture mapping to faces
+# v/vt/vn
+
+# 3421 = 342 + 321
+f 3/3/1 4/4/1 2/2/1
+f 3/3/1 2/2/1 1/1/1
