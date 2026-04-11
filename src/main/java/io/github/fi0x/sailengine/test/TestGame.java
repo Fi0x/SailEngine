@@ -27,8 +27,8 @@ public class TestGame implements ILogic
 
 	private float lightAngle;
 	private DirectionalLight directionalLight;
-	private PointLight pointLight;
-	private SpotLight spotLight;
+	private PointLight[] pointLights;
+	private SpotLight[] spotLights;
 
 	public TestGame()
 	{
@@ -53,17 +53,21 @@ public class TestGame implements ILogic
 		float lightIntensity = 1.0f;
 		Vector3f lightPosition = new Vector3f(0, 0, -3.2f);
 		Vector3f lightColour = new Vector3f(1, 1, 1);
-		pointLight = new PointLight(lightColour, lightPosition, lightIntensity, 0, 0, 1);
+		PointLight pointLight = new PointLight(lightColour, lightPosition, lightIntensity, 0, 0, 1);
 
 		Vector3f coneDir = new Vector3f(0, 0, 1);
 		float cutoff = (float) Math.cos(Math.toRadians(180));
-		spotLight = new SpotLight(new PointLight(lightColour, new Vector3f(0, 0, 1f), lightIntensity, 0, 0, 1),
-				coneDir,
-				cutoff);
+		SpotLight spotLight = new SpotLight(
+				new PointLight(lightColour, new Vector3f(0, 0, 1f), lightIntensity, 0, 0, 1), coneDir, cutoff);
+
+		SpotLight spotLight1 = new SpotLight(pointLight, coneDir, cutoff);
 
 		lightPosition = new Vector3f(-1, -10, 0);
 		lightColour = new Vector3f(1, 1, 1);
 		directionalLight = new DirectionalLight(lightColour, lightPosition, lightIntensity);
+
+		pointLights = new PointLight[]{pointLight};
+		spotLights = new SpotLight[]{spotLight, spotLight1};
 	}
 
 	@Override
@@ -84,19 +88,19 @@ public class TestGame implements ILogic
 			cameraInc.y += 1;
 
 		if (window.isKeyPressed(GLFW.GLFW_KEY_L))
-			pointLight.getPosition().x += 0.1f;
+			pointLights[0].getPosition().x += 0.1f;
 		if (window.isKeyPressed(GLFW.GLFW_KEY_J))
-			pointLight.getPosition().x -= 0.1f;
+			pointLights[0].getPosition().x -= 0.1f;
 		if (window.isKeyPressed(GLFW.GLFW_KEY_I))
-			pointLight.getPosition().y += 0.1f;
+			pointLights[0].getPosition().y += 0.1f;
 		if (window.isKeyPressed(GLFW.GLFW_KEY_K))
-			pointLight.getPosition().y -= 0.1f;
+			pointLights[0].getPosition().y -= 0.1f;
 
-		float lightPos = spotLight.getPointLight().getPosition().z;
+		float lightPos = spotLights[0].getPointLight().getPosition().z;
 		if (window.isKeyPressed(GLFW.GLFW_KEY_N))
-			spotLight.getPointLight().getPosition().z = lightPos + 0.1f;
+			spotLights[0].getPointLight().getPosition().z = lightPos + 0.1f;
 		if (window.isKeyPressed(GLFW.GLFW_KEY_M))
-			spotLight.getPointLight().getPosition().z = lightPos - 0.1f;
+			spotLights[0].getPointLight().getPosition().z = lightPos - 0.1f;
 	}
 
 	@Override
@@ -140,7 +144,7 @@ public class TestGame implements ILogic
 	@Override
 	public void render()
 	{
-		renderer.render(entity, camera, directionalLight, pointLight, spotLight);
+		renderer.render(entity, camera, directionalLight, pointLights, spotLights);
 	}
 
 	@Override
