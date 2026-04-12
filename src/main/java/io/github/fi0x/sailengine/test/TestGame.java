@@ -7,6 +7,7 @@ import io.github.fi0x.sailengine.core.entity.Texture;
 import io.github.fi0x.sailengine.core.lighting.DirectionalLight;
 import io.github.fi0x.sailengine.core.lighting.PointLight;
 import io.github.fi0x.sailengine.core.lighting.SpotLight;
+import io.github.fi0x.sailengine.core.rendering.RenderManager;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
