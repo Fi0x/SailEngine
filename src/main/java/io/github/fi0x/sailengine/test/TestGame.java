@@ -2,8 +2,10 @@ package io.github.fi0x.sailengine.test;
 
 import io.github.fi0x.sailengine.core.*;
 import io.github.fi0x.sailengine.core.entity.Entity;
+import io.github.fi0x.sailengine.core.entity.Material;
 import io.github.fi0x.sailengine.core.entity.Model;
 import io.github.fi0x.sailengine.core.entity.Texture;
+import io.github.fi0x.sailengine.core.entity.terrain.Terrain;
 import io.github.fi0x.sailengine.core.lighting.DirectionalLight;
 import io.github.fi0x.sailengine.core.lighting.PointLight;
 import io.github.fi0x.sailengine.core.lighting.SpotLight;
@@ -26,6 +28,8 @@ public class TestGame implements ILogic
 	private final WindowManager window;
 
 	private List<Entity> entities;
+	private List<Terrain> terrains;
+
 	private Camera camera;
 
 	private Vector3f cameraInc;
@@ -54,6 +58,14 @@ public class TestGame implements ILogic
 
 		Model model = loader.loadObjModel("/models/cube-custom.obj");
 		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")), 1f);
+
+		terrains = new ArrayList<>();
+		Terrain terrain = new Terrain(new Vector3f(0, -1, -800), loader,
+				new Material(new Texture(loader.loadTexture("textures/terrain.png")), 0.1f));
+		Terrain terrain2 = new Terrain(new Vector3f(-800, -1, -800), loader,
+				new Material(new Texture(loader.loadTexture("textures/flowers.png")), 0.1f));
+		terrains.add(terrain);
+		terrains.add(terrain2);
 
 		Random rand = new Random();
 		for (int i = 0; i < 200; i++)
@@ -158,6 +170,9 @@ public class TestGame implements ILogic
 
 		for (Entity entity : entities)
 			renderer.processEntity(entity);
+
+		for (Terrain terrain : terrains)
+			renderer.processTerrain(terrain);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import io.github.fi0x.sailengine.core.entity.Model;
 import io.github.fi0x.sailengine.core.lighting.DirectionalLight;
 import io.github.fi0x.sailengine.core.lighting.PointLight;
 import io.github.fi0x.sailengine.core.lighting.SpotLight;
+import io.github.fi0x.sailengine.core.utils.Constants;
 import io.github.fi0x.sailengine.core.utils.Transformation;
 import io.github.fi0x.sailengine.core.utils.Utils;
 import io.github.fi0x.sailengine.test.Launcher;
@@ -45,8 +46,8 @@ public class EntityRender implements IRenderer
 		shader.createMaterialUniform("material");
 		shader.createUniform("specularPower");
 		shader.createDirectionalLightingUniform("directionalLight");
-		shader.createPointLightListUniform("pointLights", 5);
-		shader.createSpotLightListUniform("spotLights", 5);
+		shader.createPointLightListUniform("pointLights", Constants.MAX_POINT_LIGHTS);
+		shader.createSpotLightListUniform("spotLights", Constants.MAX_SPOT_LIGHTS);
 	}
 
 	@Override

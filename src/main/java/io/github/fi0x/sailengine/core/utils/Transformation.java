@@ -2,6 +2,7 @@ package io.github.fi0x.sailengine.core.utils;
 
 import io.github.fi0x.sailengine.core.Camera;
 import io.github.fi0x.sailengine.core.entity.Entity;
+import io.github.fi0x.sailengine.core.entity.terrain.Terrain;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -13,6 +14,13 @@ public class Transformation
 		matrix.identity().translate(entity.getPos()).rotateX((float) Math.toRadians(entity.getRotation().x))
 				.rotateY((float) Math.toRadians(entity.getRotation().y))
 				.rotateZ((float) Math.toRadians(entity.getRotation().z)).scale(entity.getScale());
+		return matrix;
+	}
+
+	public static Matrix4f createTransformationMatrix(Terrain terrain)
+	{
+		Matrix4f matrix = new Matrix4f();
+		matrix.identity().translate(terrain.getPosition()).scale(1);
 		return matrix;
 	}
 

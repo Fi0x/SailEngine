@@ -4,6 +4,7 @@ import io.github.fi0x.sailengine.core.Camera;
 import io.github.fi0x.sailengine.core.ShaderManager;
 import io.github.fi0x.sailengine.core.WindowManager;
 import io.github.fi0x.sailengine.core.entity.Entity;
+import io.github.fi0x.sailengine.core.entity.terrain.Terrain;
 import io.github.fi0x.sailengine.core.lighting.DirectionalLight;
 import io.github.fi0x.sailengine.core.lighting.PointLight;
 import io.github.fi0x.sailengine.core.lighting.SpotLight;
@@ -18,6 +19,7 @@ public class RenderManager
 {
 	private final WindowManager window;
 	private EntityRender entityRenderer;
+	private TerrainRenderer terrainRenderer;
 
 	public RenderManager()
 	{
@@ -27,8 +29,10 @@ public class RenderManager
 	public void init() throws Exception
 	{
 		entityRenderer = new EntityRender();
+		terrainRenderer = new TerrainRenderer();
 
 		entityRenderer.init();
+		terrainRenderer.init();
 	}
 
 	public static void renderLights(PointLight[] pointLights, SpotLight[] spotLights,
@@ -61,6 +65,7 @@ public class RenderManager
 		}
 
 		entityRenderer.render(camera, pointLights, spotLights, directionalLight);
+		terrainRenderer.render(camera, pointLights, spotLights, directionalLight);
 	}
 
 	public void processEntity(Entity entity)
@@ -76,6 +81,11 @@ public class RenderManager
 		}
 	}
 
+	public void processTerrain(Terrain terrain)
+	{
+		terrainRenderer.getTerrains().add(terrain);
+	}
+
 	public void clear()
 	{
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -84,5 +94,6 @@ public class RenderManager
 	public void cleanup()
 	{
 		entityRenderer.cleanup();
+		terrainRenderer.cleanup();
 	}
 }
