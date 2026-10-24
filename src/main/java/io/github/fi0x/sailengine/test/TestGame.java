@@ -60,9 +60,9 @@ public class TestGame implements ILogic
 		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")), 1f);
 
 		terrains = new ArrayList<>();
-		Terrain terrain = new Terrain(new Vector3f(0, -1, -800), loader,
+		Terrain terrain = new Terrain(new Vector3f(0, -1, 0), loader,
 				new Material(new Texture(loader.loadTexture("textures/terrain.png")), 0.1f));
-		Terrain terrain2 = new Terrain(new Vector3f(-800, -1, -800), loader,
+		Terrain terrain2 = new Terrain(new Vector3f(-100, -1, 0), loader,
 				new Material(new Texture(loader.loadTexture("textures/flowers.png")), 0.1f));
 		terrains.add(terrain);
 		terrains.add(terrain2);

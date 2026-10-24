@@ -36,7 +36,7 @@ public class Terrain
 			{
 				vertices[vertexPointer * 3] = j / (VERTEX_COUNT - 1f) * SIZE;
 				vertices[vertexPointer * 3 + 1] = 0;
-				vertices[vertexPointer * 3 + 1] = i / (VERTEX_COUNT - 1f) * SIZE;
+				vertices[vertexPointer * 3 + 2] = i / (VERTEX_COUNT - 1f) * SIZE;
 				normals[vertexPointer * 3] = 0;
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
