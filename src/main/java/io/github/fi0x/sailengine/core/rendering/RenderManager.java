@@ -4,6 +4,7 @@ import io.github.fi0x.sailengine.core.Camera;
 import io.github.fi0x.sailengine.core.ShaderManager;
 import io.github.fi0x.sailengine.core.WindowManager;
 import io.github.fi0x.sailengine.core.entity.Entity;
+import io.github.fi0x.sailengine.core.entity.SceneManager;
 import io.github.fi0x.sailengine.core.entity.terrain.Terrain;
 import io.github.fi0x.sailengine.core.lighting.DirectionalLight;
 import io.github.fi0x.sailengine.core.lighting.PointLight;
@@ -53,8 +54,7 @@ public class RenderManager
 		shader.setUniform("directionalLight", directionalLight);
 	}
 
-	public void render(Camera camera, DirectionalLight directionalLight, PointLight[] pointLights,
-					   SpotLight[] spotLights)
+	public void render(Camera camera, SceneManager sceneManager)
 	{
 		clear();
 
@@ -64,8 +64,10 @@ public class RenderManager
 			window.setResize(false);
 		}
 
-		entityRenderer.render(camera, pointLights, spotLights, directionalLight);
-		terrainRenderer.render(camera, pointLights, spotLights, directionalLight);
+		entityRenderer.render(camera, sceneManager.getPointLights(), sceneManager.getSpotLights(),
+				sceneManager.getDirectionalLight());
+		terrainRenderer.render(camera, sceneManager.getPointLights(), sceneManager.getSpotLights(),
+				sceneManager.getDirectionalLight());
 	}
 
 	public void processEntity(Entity entity)
